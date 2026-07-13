@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancer Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Landing Page -->
+    <div class="landing-page active" id="landingPage">
+        <div class="landing-content">
+            <h1>Advanced Cancer Detection System</h1>
+            <p>Early detection saves lives. Our AI-powered platform helps identify potential cancer risks and provides personalized recommendations.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-robot"></i>
+                    <h3>AI-Powered Analysis</h3>
+                    <p>Advanced algorithms analyze symptoms and test results to detect potential cancer risks.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-stethoscope"></i>
+                    <h3>Multiple Cancer Types</h3>
+                    <p>Detection for breast, lung, skin, cervical, and prostate cancers with detailed staging.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Progress Tracking</h3>
+                    <p>Monitor your health over time with detailed reports and visual progress tracking.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-user-md"></i>
+                    <h3>Expert Recommendations</h3>
+                    <p>Personalized diet plans and doctor recommendations based on your risk assessment.</p>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="window.location.href='/auth'">
+                Start Now <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

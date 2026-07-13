@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker - Cancer Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">CancerDetect</div>
+                    <div class="user-menu">
+                        <div class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName">User</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 8px;"></i>
+                        </div>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <div class="dropdown-item" onclick="window.location.href='/profile'">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                            <div class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="sidebar">
+                <div class="nav-item" onclick="window.location.href='/dashboard'">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/assessment'">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Cancer Assessment</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/history'">
+                    <i class="fas fa-history"></i>
+                    <span>Account & History</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/image-analysis'">
+                    <i class="fas fa-image"></i>
+                    <span>Image Analysis</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/profile'">
+                    <i class="fas fa-user-cog"></i>
+                    <span>My Profile</span>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="content-section active">
+                    <div class="tracker-container">
+                        <div class="tracker-header">
+                            <h2 class="section-title">Progress Tracker</h2>
+                            <button class="btn btn-outline" onclick="window.location.href='/history'">
+                                <i class="fas fa-arrow-left"></i> Back to History
+                            </button>
+                        </div>
+                        
+                        <div class="patient-summary">
+                            <h3><i class="fas fa-user"></i> Patient Summary</h3>
+                            <div class="summary-cards">
+                                <div class="summary-card">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <div class="summary-value" id="currentRisk">35%</div>
+                                        <div class="summary-label">Current Risk</div>
+                                    </div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-arrow-down"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <div class="summary-value" id="riskChange">-12%</div>
+                                        <div class="summary-label">Risk Change</div>
+                                    </div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <div class="summary-value" id="assessmentCount">3</div>
+                                        <div class="summary-label">Total Assessments</div>
+                                    </div>
+                                </div>
+                                <div class="summary-card">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-trending-up"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <div class="summary-value" id="improvement">Good</div>
+                                        <div class="summary-label">Overall Trend</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-section">
+                            <div class="chart-container">
+                                <h3><i class="fas fa-chart-bar"></i> Cancer Risk Over Time</h3>
+                                <canvas id="riskChart"></canvas>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <h3><i class="fas fa-heartbeat"></i> Symptom Severity Tracking</h3>
+                                <canvas id="symptomChart"></canvas>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <h3><i class="fas fa-weight"></i> Lifestyle Factors</h3>
+                                <canvas id="lifestyleChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="progress-insights">
+                            <h3><i class="fas fa-lightbulb"></i> Progress Insights</h3>
+                            <div class="insights-grid">
+                                <div class="insight-card positive">
+                                    <i class="fas fa-check-circle"></i>
+                                    <h4>Positive Changes</h4>
+                                    <ul>
+                                        <li>Reduced smoking from current to former</li>
+                                        <li>Improved BMI from 28 to 25</li>
+                                        <li>Increased physical activity</li>
+                                    </ul>
+                                </div>
+                                <div class="insight-card warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <h4>Areas for Improvement</h4>
+                                    <ul>
+                                        <li>Consider reducing alcohol consumption</li>
+                                        <li>Increase vegetable intake</li>
+                                        <li>Schedule regular health check-ups</li>
+                                    </ul>
+                                </div>
+                                <div class="insight-card info">
+                                    <i class="fas fa-info-circle"></i>
+                                    <h4>Recommendations</h4>
+                                    <ul>
+                                        <li>Continue current lifestyle improvements</li>
+                                        <li>Next assessment recommended in 3 months</li>
+                                        <li>Consider genetic counseling</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tracker-actions">
+                            <button class="btn" onclick="window.location.href='/assessment'">
+                                <i class="fas fa-plus"></i> New Assessment
+                            </button>
+                            <button class="btn btn-outline" onclick="window.location.href='/history'">
+                                <i class="fas fa-times"></i> Close Tracker
+                            </button>
+                            <button class="btn btn-outline" onclick="printTracker()">
+                                <i class="fas fa-print"></i> Print Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // User menu functionality
+            const userBtn = document.getElementById('userBtn');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            userBtn.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('active');
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/api/logout');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    window.location.href = '/';
+                }
+            });
+            
+            // Initialize charts
+            initializeCharts();
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        });
+        
+        function initializeCharts() {
+            // Risk Chart
+            const riskCtx = document.getElementById('riskChart').getContext('2d');
+            const riskChart = new Chart(riskCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Mar', 'May', 'Jul', 'Sep', 'Nov'],
+                    datasets: [{
+                        label: 'Cancer Risk %',
+                        data: [68, 55, 45, 38, 35, 32],
+                        borderColor: '#4a6fa5',
+                        backgroundColor: 'rgba(74, 111, 165, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#4a6fa5',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Risk Percentage (%)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Timeline'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Symptom Chart
+            const symptomCtx = document.getElementById('symptomChart').getContext('2d');
+            const symptomChart = new Chart(symptomCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Fatigue', 'Cough', 'Weight Loss', 'Pain', 'Skin Changes', 'Sleep Issues'],
+                    datasets: [{
+                        label: 'Symptom Severity (1-10)',
+                        data: [6, 8, 4, 7, 3, 5],
+                        backgroundColor: [
+                            'rgba(79, 195, 161, 0.7)',
+                            'rgba(243, 156, 18, 0.7)',
+                            'rgba(231, 76, 60, 0.7)',
+                            'rgba(155, 89, 182, 0.7)',
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(241, 196, 15, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(79, 195, 161)',
+                            'rgb(243, 156, 18)',
+                            'rgb(231, 76, 60)',
+                            'rgb(155, 89, 182)',
+                            'rgb(52, 152, 219)',
+                            'rgb(241, 196, 15)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            title: {
+                                display: true,
+                                text: 'Severity Level'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Lifestyle Chart
+            const lifestyleCtx = document.getElementById('lifestyleChart').getContext('2d');
+            const lifestyleChart = new Chart(lifestyleCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Physical Activity', 'Healthy Diet', 'Stress Management', 'Sleep Quality', 'Avoiding Toxins', 'Regular Check-ups'],
+                    datasets: [
+                        {
+                            label: 'Current',
+                            data: [7, 6, 5, 6, 8, 7],
+                            backgroundColor: 'rgba(79, 195, 161, 0.2)',
+                            borderColor: 'rgb(79, 195, 161)',
+                            pointBackgroundColor: 'rgb(79, 195, 161)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgb(79, 195, 161)'
+                        },
+                        {
+                            label: 'Previous',
+                            data: [4, 5, 3, 5, 6, 5],
+                            backgroundColor: 'rgba(74, 111, 165, 0.2)',
+                            borderColor: 'rgb(74, 111, 165)',
+                            pointBackgroundColor: 'rgb(74, 111, 165)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgb(74, 111, 165)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 10
+                        }
+                    }
+                }
+            });
+        }
+        
+        function printTracker() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Cancer Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="auth-body">
+    <div class="auth-container">
+        <div class="auth-header">
+            <h1>CancerDetect</h1>
+            <p>Access your health dashboard</p>
+        </div>
+
+        <div class="auth-modal">
+            <div class="form-tabs">
+                <div class="form-tab active" data-tab="login">Login</div>
+                <div class="form-tab" data-tab="register">Register</div>
+            </div>
+            
+            <div class="form-section active" id="loginSection">
+                <h2>Welcome Back</h2>
+                <p>Enter your credentials to access your dashboard</p>
+                
+                <div class="form-group">
+                    <label for="patientId">Patient ID</label>
+                    <input type="text" id="patientId" class="form-control" placeholder="Enter your patient ID" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
+                </div>
+                
+                <button class="btn auth-btn" id="loginBtn">
+                    Login
+                </button>
+                
+                <div class="auth-footer">
+                    <a href="/" class="back-link">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+            
+            <div class="form-section" id="registerSection">
+                <h2>Create Account</h2>
+                <p>Fill in your details to create a new account</p>
+                
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" class="form-control" placeholder="Enter your age" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="registerPassword">Create Password</label>
+                    <input type="password" id="registerPassword" class="form-control" placeholder="Create a password" required>
+                </div>
+                
+                <button class="btn auth-btn" id="registerBtn">
+                    Register
+                </button>
+                
+                <div class="form-group" id="generatedId" style="display: none; margin-top: 20px; padding: 15px; background-color: #e8f7f2; border-radius: 8px;">
+                    <label>Your Patient ID</label>
+                    <p id="patientIdDisplay" style="font-weight: bold; font-size: 1.2rem; margin-top: 5px;"></p>
+                    <p style="font-size: 0.9rem; margin-top: 5px;">Please save this ID for future logins</p>
+                </div>
+                
+                <div class="auth-footer">
+                    <a href="/" class="back-link">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Authentication specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            const formTabs = document.querySelectorAll('.form-tab');
+            const formSections = document.querySelectorAll('.form-section');
+            
+            formTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.getAttribute('data-tab');
+                    
+                    formTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    formSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === `${tabName}Section`) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Login functionality
+            document.getElementById('loginBtn').addEventListener('click', async () => {
+                const patientId = document.getElementById('patientId').value;
+                const password = document.getElementById('loginPassword').value;
+                
+                if (!patientId || !password) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            patient_id: patientId,
+                            password: password
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        window.location.href = '/dashboard';
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    alert('Login failed. Please try again.');
+                }
+            });
+            
+            // Register functionality
+            document.getElementById('registerBtn').addEventListener('click', async () => {
+                const name = document.getElementById('fullName').value;
+                const age = document.getElementById('age').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const password = document.getElementById('registerPassword').value;
+                
+                if (!name || !age || !email || !phone || !password) {
+                    alert('Please fill in all fields');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            age: age,
+                            email: email,
+                            phone: phone,
+                            password: password
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        document.getElementById('patientIdDisplay').textContent = data.patient_id;
+                        document.getElementById('generatedId').style.display = 'block';
+                        
+                        // Switch to login tab after 3 seconds
+                        setTimeout(() => {
+                            document.querySelector('.form-tab[data-tab="login"]').click();
+                            document.getElementById('patientId').value = data.patient_id;
+                        }, 3000);
+                    } else {
+                        alert('Registration failed');
+                    }
+                } catch (error) {
+                    alert('Registration failed. Please try again.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

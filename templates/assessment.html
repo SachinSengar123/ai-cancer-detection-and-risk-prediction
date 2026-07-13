@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment - Cancer Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">CancerDetect</div>
+                    <div class="user-menu">
+                        <div class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName">User</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 8px;"></i>
+                        </div>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <div class="dropdown-item" onclick="window.location.href='/profile'">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                            <div class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="sidebar">
+                <div class="nav-item" onclick="window.location.href='/dashboard'">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item active">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Cancer Assessment</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/history'">
+                    <i class="fas fa-history"></i>
+                    <span>Account & History</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/image-analysis'">
+                    <i class="fas fa-image"></i>
+                    <span>Image Analysis</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/profile'">
+                    <i class="fas fa-user-cog"></i>
+                    <span>My Profile</span>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="content-section active">
+                    <h2 class="section-title">Cancer Risk Assessment</h2>
+                    <p>Please provide accurate information for the most reliable assessment.</p>
+                    
+                    <form id="assessmentForm" class="assessment-form">
+                        <!-- Personal Information -->
+                        <div class="form-card">
+                            <h3><i class="fas fa-user"></i> Personal Information</h3>
+                            <div class="form-group">
+                                <label for="assessAge">Age</label>
+                                <input type="number" id="assessAge" class="form-control" required min="1" max="120">
+                            </div>
+                            <div class="form-group">
+                                <label for="assessWeight">Weight (kg)</label>
+                                <input type="number" id="assessWeight" class="form-control" required min="1" max="300">
+                            </div>
+                            <div class="form-group">
+                                <label for="assessHeight">Height (cm)</label>
+                                <input type="number" id="assessHeight" class="form-control" required min="50" max="300">
+                            </div>
+                            <div class="form-group">
+                                <label>Family History of Cancer</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="familyYes" name="family_history" value="true">
+                                        <label for="familyYes">Yes</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="familyNo" name="family_history" value="false" checked>
+                                        <label for="familyNo">No</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Blood Test Results -->
+                        <div class="form-card">
+                            <h3><i class="fas fa-tint"></i> Blood Test Results</h3>
+                            <div class="form-group">
+                                <label for="wbc">White Blood Cells (WBC) x10^9/L</label>
+                                <input type="number" id="wbc" class="form-control" step="0.1" placeholder="Normal: 4.0-11.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="rbc">Red Blood Cells (RBC) x10^12/L</label>
+                                <input type="number" id="rbc" class="form-control" step="0.1" placeholder="Normal: 4.2-5.8">
+                            </div>
+                            <div class="form-group">
+                                <label for="platelets">Platelets x10^9/L</label>
+                                <input type="number" id="platelets" class="form-control" placeholder="Normal: 150-400">
+                            </div>
+                            <div class="form-group">
+                                <label for="hemoglobin">Hemoglobin (g/dL)</label>
+                                <input type="number" id="hemoglobin" class="form-control" step="0.1" placeholder="Normal: 13.0-17.0">
+                            </div>
+                        </div>
+                        
+                        <!-- Symptoms -->
+                        <div class="form-card">
+                            <h3><i class="fas fa-stethoscope"></i> Symptoms</h3>
+                            <div class="form-group">
+                                <label>Symptoms Experienced (Select all that apply)</label>
+                                <div class="checkbox-group">
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom1" value="persistent_cough">
+                                        <label for="symptom1">Persistent Cough</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom2" value="unexplained_weight_loss">
+                                        <label for="symptom2">Unexplained Weight Loss</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom3" value="fatigue">
+                                        <label for="symptom3">Fatigue</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom4" value="skin_changes">
+                                        <label for="symptom4">Skin Changes</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom5" value="lump">
+                                        <label for="symptom5">Lump or Thickening</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom6" value="bowel_changes">
+                                        <label for="symptom6">Bowel/Bladder Changes</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom7" value="difficulty_swallowing">
+                                        <label for="symptom7">Difficulty Swallowing</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom8" value="persistent_indigestion">
+                                        <label for="symptom8">Persistent Indigestion</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom9" value="unusual_bleeding">
+                                        <label for="symptom9">Unusual Bleeding</label>
+                                    </div>
+                                    <div class="checkbox-item">
+                                        <input type="checkbox" id="symptom10" value="night_sweats">
+                                        <label for="symptom10">Night Sweats</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="painArea">Pain Area</label>
+                                <select id="painArea" class="form-control">
+                                    <option value="">Select pain area</option>
+                                    <option value="chest">Chest</option>
+                                    <option value="abdomen">Abdomen</option>
+                                    <option value="pelvis">Pelvis</option>
+                                    <option value="bones">Bones/Joints</option>
+                                    <option value="head">Head</option>
+                                    <option value="back">Back</option>
+                                    <option value="other">Other</option>
+                                    <option value="none">No Pain</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="painLevel">Pain Level (1-10)</label>
+                                <input type="range" id="painLevel" class="form-control" min="0" max="10" value="0">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                                    <span>0 (No Pain)</span>
+                                    <span id="painValue">0</span>
+                                    <span>10 (Severe)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Lifestyle Factors -->
+                        <div class="form-card">
+                            <h3><i class="fas fa-smoking"></i> Lifestyle Factors</h3>
+                            <div class="form-group">
+                                <label>Smoking Status</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="smokeCurrent" name="smoking" value="current">
+                                        <label for="smokeCurrent">Current Smoker</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="smokeFormer" name="smoking" value="former">
+                                        <label for="smokeFormer">Former Smoker</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="smokeNever" name="smoking" value="never" checked>
+                                        <label for="smokeNever">Never Smoked</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Alcohol Consumption</label>
+                                <div class="radio-group">
+                                    <div class="radio-item">
+                                        <input type="radio" id="alcoholCurrent" name="alcohol" value="current">
+                                        <label for="alcoholCurrent">Current Drinker</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="alcoholFormer" name="alcohol" value="former">
+                                        <label for="alcoholFormer">Former Drinker</label>
+                                    </div>
+                                    <div class="radio-item">
+                                        <input type="radio" id="alcoholNever" name="alcohol" value="never" checked>
+                                        <label for="alcoholNever">Never Drinks</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="exercise">Physical Activity (days/week)</label>
+                                <select id="exercise" class="form-control">
+                                    <option value="0">0 days</option>
+                                    <option value="1-2">1-2 days</option>
+                                    <option value="3-4" selected>3-4 days</option>
+                                    <option value="5-6">5-6 days</option>
+                                    <option value="7">Every day</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Medical Tests -->
+                        <div class="form-card">
+                            <h3><i class="fas fa-file-medical"></i> Medical Tests</h3>
+                            <div class="form-group">
+                                <label for="psaTest">PSA Test Result (if done) - ng/mL</label>
+                                <input type="number" id="psaTest" class="form-control" step="0.1" placeholder="Normal: 0-4.0">
+                                <div class="file-upload" id="psaUpload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Upload PSA Test Report (Optional)</p>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="colonoscopy">Colonoscopy Result</label>
+                                <select id="colonoscopy" class="form-control">
+                                    <option value="">Not Done</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="polyps">Polyps Found</option>
+                                    <option value="abnormal">Abnormal</option>
+                                </select>
+                                <div class="file-upload" id="colonoscopyUpload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Upload Colonoscopy Report (Optional)</p>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="geneticTesting">Genetic Testing</label>
+                                <select id="geneticTesting" class="form-control">
+                                    <option value="">Not Done</option>
+                                    <option value="positive">Positive</option>
+                                    <option value="negative">Negative</option>
+                                    <option value="inconclusive">Inconclusive</option>
+                                </select>
+                                <div class="file-upload" id="geneticUpload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Upload Genetic Test Report (Optional)</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="mammogram">Mammogram Result (if applicable)</label>
+                                <select id="mammogram" class="form-control">
+                                    <option value="">Not Done</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="abnormal">Abnormal</option>
+                                    <option value="suspicious">Suspicious</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="analyze-btn-container">
+                            <button type="submit" class="btn" id="analyzeBtn">
+                                <i class="fas fa-chart-bar"></i> Analyze Cancer Risk
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // User menu functionality
+            const userBtn = document.getElementById('userBtn');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            userBtn.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('active');
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/api/logout');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    window.location.href = '/';
+                }
+            });
+            
+            // Pain level display
+            const painLevel = document.getElementById('painLevel');
+            const painValue = document.getElementById('painValue');
+            
+            painLevel.addEventListener('input', () => {
+                painValue.textContent = painLevel.value;
+            });
+            
+            // File upload handlers
+            document.getElementById('psaUpload').addEventListener('click', () => {
+                alert('File upload functionality would be implemented here');
+            });
+            
+            document.getElementById('colonoscopyUpload').addEventListener('click', () => {
+                alert('File upload functionality would be implemented here');
+            });
+            
+            document.getElementById('geneticUpload').addEventListener('click', () => {
+                alert('File upload functionality would be implemented here');
+            });
+            
+            // Form submission
+            document.getElementById('assessmentForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Collect form data
+                const formData = {
+                    age: document.getElementById('assessAge').value,
+                    weight: document.getElementById('assessWeight').value,
+                    height: document.getElementById('assessHeight').value,
+                    family_history: document.querySelector('input[name="family_history"]:checked').value === 'true',
+                    wbc: document.getElementById('wbc').value,
+                    rbc: document.getElementById('rbc').value,
+                    platelets: document.getElementById('platelets').value,
+                    hemoglobin: document.getElementById('hemoglobin').value,
+                    pain_area: document.getElementById('painArea').value,
+                    pain_level: document.getElementById('painLevel').value,
+                    smoking: document.querySelector('input[name="smoking"]:checked').value,
+                    alcohol: document.querySelector('input[name="alcohol"]:checked').value,
+                    exercise: document.getElementById('exercise').value,
+                    psa_test: document.getElementById('psaTest').value,
+                    colonoscopy: document.getElementById('colonoscopy').value,
+                    genetic_testing: document.getElementById('geneticTesting').value,
+                    mammogram: document.getElementById('mammogram').value,
+                    symptoms: []
+                };
+                
+                // Collect symptoms
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    formData.symptoms.push(checkbox.value);
+                });
+                
+                // Validate required fields
+                if (!formData.age || !formData.weight || !formData.height) {
+                    alert('Please fill in all required personal information fields');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Store results in sessionStorage to pass to results page
+                        sessionStorage.setItem('assessmentResults', JSON.stringify(data));
+                        window.location.href = '/results';
+                    } else {
+                        alert('Analysis failed: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Analysis failed. Please try again.');
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        });
+    </script>
+    {% include 'floating_chat_widget.html' %}
+</body>
+</html>

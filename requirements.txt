@@ -1,0 +1,15 @@
+Flask==2.3.3
+Werkzeug==2.3.7
+Jinja2==3.1.2
+itsdangerous==2.1.2
+click==8.1.3
+mysql-connector-python==8.0.33
+python-dotenv==1.0.0
+google-genai==1.68.0
+# scikit-learn, pandas, numpy are optional dependencies for data analysis functions.
+# They are disabled for this minimal run environment to avoid compiler/toolchain issues.
+# scikit-learn==1.5.2
+# pandas==2.2.3
+# numpy==2.1.2
+joblib==1.3.0
+gunicorn==21.2.0

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - Cancer Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">CancerDetect</div>
+                    <div class="user-menu">
+                        <div class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName">User</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 8px;"></i>
+                        </div>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <div class="dropdown-item" onclick="window.location.href='/profile'">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                            <div class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="sidebar">
+                <div class="nav-item" onclick="window.location.href='/dashboard'">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/assessment'">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Cancer Assessment</span>
+                </div>
+                <div class="nav-item active">
+                    <i class="fas fa-history"></i>
+                    <span>Account & History</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/image-analysis'">
+                    <i class="fas fa-image"></i>
+                    <span>Image Analysis</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/profile'">
+                    <i class="fas fa-user-cog"></i>
+                    <span>My Profile</span>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="content-section active">
+                    <h2 class="section-title">Account & History</h2>
+                    
+                    <div class="search-box">
+                        <input type="text" id="searchName" class="form-control" placeholder="Enter patient name">
+                        <input type="text" id="searchId" class="form-control" placeholder="Enter patient ID" required>
+                        <button class="btn" id="searchBtn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                    
+                    <div class="patient-info-card" id="patientInfo" style="display: none;">
+                        <h3><i class="fas fa-user"></i> Patient Information</h3>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Patient Name:</div>
+                                <div class="detail-value" id="infoName">-</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Patient ID:</div>
+                                <div class="detail-value" id="infoId">-</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Age:</div>
+                                <div class="detail-value" id="infoAge">-</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Total Assessments:</div>
+                                <div class="detail-value" id="infoAssessments">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="history-section">
+                        <h3><i class="fas fa-clipboard-list"></i> Assessment History</h3>
+                        
+                        <div class="history-cards" id="historyCards">
+                            <!-- Demo assessments -->
+                            <div class="history-card">
+                                <h3>Assessment #1</h3>
+                                <p><strong>Date:</strong> October 25, 2024</p>
+                                <p><strong>Cancer Type:</strong> None Detected</p>
+                                <p><strong>Risk Level:</strong> <span class="risk-low">Low (22%)</span></p>
+                                <div class="card-actions">
+                                    <button class="btn" onclick="viewReport('1')">
+                                        <i class="fas fa-file-medical"></i> View Report
+                                    </button>
+                                    <button class="btn btn-outline" onclick="viewTracker('1')">
+                                        <i class="fas fa-chart-line"></i> Tracker
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="history-card">
+                                <h3>Assessment #2</h3>
+                                <p><strong>Date:</strong> October 15, 2024</p>
+                                <p><strong>Cancer Type:</strong> Lung Cancer Risk</p>
+                                <p><strong>Risk Level:</strong> <span class="risk-high">High (68%)</span></p>
+                                <div class="card-actions">
+                                    <button class="btn" onclick="viewReport('2')">
+                                        <i class="fas fa-file-medical"></i> View Report
+                                    </button>
+                                    <button class="btn btn-outline" onclick="viewTracker('2')">
+                                        <i class="fas fa-chart-line"></i> Tracker
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="history-card">
+                                <h3>Assessment #3</h3>
+                                <p><strong>Date:</strong> September 28, 2024</p>
+                                <p><strong>Cancer Type:</strong> Breast Cancer Risk</p>
+                                <p><strong>Risk Level:</strong> <span class="risk-medium">Moderate (45%)</span></p>
+                                <div class="card-actions">
+                                    <button class="btn" onclick="viewReport('3')">
+                                        <i class="fas fa-file-medical"></i> View Report
+                                    </button>
+                                    <button class="btn btn-outline" onclick="viewTracker('3')">
+                                        <i class="fas fa-chart-line"></i> Tracker
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <i class="fas fa-clipboard-list" style="font-size: 4rem; color: #ddd; margin-bottom: 20px;"></i>
+                        <h3>No Assessments Found</h3>
+                        <p>No assessment history available for this patient.</p>
+                        <button class="btn" onclick="window.location.href='/assessment'">
+                            <i class="fas fa-plus"></i> Start New Assessment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // User menu functionality
+            const userBtn = document.getElementById('userBtn');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            userBtn.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('active');
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/api/logout');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    window.location.href = '/';
+                }
+            });
+            
+            // Search functionality
+            document.getElementById('searchBtn').addEventListener('click', performSearch);
+            
+            // Enter key support for search
+            document.getElementById('searchId').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            function performSearch() {
+                const patientId = document.getElementById('searchId').value;
+                const patientName = document.getElementById('searchName').value;
+                
+                if (!patientId) {
+                    alert('Please enter Patient ID');
+                    return;
+                }
+                
+                // Show loading state
+                const searchBtn = document.getElementById('searchBtn');
+                const originalText = searchBtn.innerHTML;
+                searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Searching...';
+                searchBtn.disabled = true;
+                
+                // Simulate API call
+                setTimeout(() => {
+                    // Show patient info
+                    document.getElementById('patientInfo').style.display = 'block';
+                    document.getElementById('infoName').textContent = patientName || 'John Doe';
+                    document.getElementById('infoId').textContent = patientId;
+                    document.getElementById('infoAge').textContent = '45';
+                    document.getElementById('infoAssessments').textContent = '3';
+                    
+                    // Show history cards
+                    document.getElementById('historyCards').style.display = 'grid';
+                    document.getElementById('emptyState').style.display = 'none';
+                    
+                    // Reset button
+                    searchBtn.innerHTML = originalText;
+                    searchBtn.disabled = false;
+                }, 1000);
+            }
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        });
+        
+        function viewReport(assessmentId) {
+            // Store assessment ID and redirect to results page
+            sessionStorage.setItem('viewingAssessment', assessmentId);
+            window.location.href = '/results';
+        }
+        
+        function viewTracker(assessmentId) {
+            // Store assessment ID and redirect to tracker page
+            sessionStorage.setItem('trackingAssessment', assessmentId);
+            window.location.href = '/tracker';
+        }
+    </script>
+    {% include 'floating_chat_widget.html' %}
+</body>
+</html>

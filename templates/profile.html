@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Cancer Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">CancerDetect</div>
+                    <div class="user-menu">
+                        <div class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName">User</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 8px;"></i>
+                        </div>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <div class="dropdown-item active">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                            <div class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="sidebar">
+                <div class="nav-item" onclick="window.location.href='/dashboard'">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/assessment'">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Cancer Assessment</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/history'">
+                    <i class="fas fa-history"></i>
+                    <span>Account & History</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/image-analysis'">
+                    <i class="fas fa-image"></i>
+                    <span>Image Analysis</span>
+                </div>
+                <div class="nav-item active">
+                    <i class="fas fa-user-cog"></i>
+                    <span>My Profile</span>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="content-section active">
+                    <div class="profile-container">
+                        <h2 class="section-title">My Profile</h2>
+                        
+                        <div class="profile-header">
+                            <div class="profile-pic" id="profilePic">
+                                <i class="fas fa-user"></i>
+                                <img id="profileImage" style="display: none;">
+                            </div>
+                            <div class="profile-info">
+                                <h2 id="profileName">John Doe</h2>
+                                <p id="profileId">Patient ID: PT-2024-001</p>
+                                <input type="file" id="profileUpload" accept="image/*" style="display: none;">
+                                <button class="btn" id="changePhotoBtn" style="margin-top: 10px;">
+                                    <i class="fas fa-camera"></i> Change Photo
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Full Name:</div>
+                                <div class="detail-value" id="profileFullName">John Doe</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Age:</div>
+                                <div class="detail-value" id="profileAge">45</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Email:</div>
+                                <div class="detail-value" id="profileEmail">john.doe@example.com</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Phone:</div>
+                                <div class="detail-value" id="profilePhone">+1 (555) 123-4567</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Member Since:</div>
+                                <div class="detail-value" id="profileSince">January 15, 2024</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Last Assessment:</div>
+                                <div class="detail-value" id="profileLastAssessment">October 25, 2024</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Total Assessments:</div>
+                                <div class="detail-value" id="profileTotalAssessments">3</div>
+                            </div>
+                        </div>
+
+                        <div class="profile-actions">
+                            <button class="btn" id="editProfileBtn">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
+                            <button class="btn btn-outline" id="changePasswordBtn">
+                                <i class="fas fa-key"></i> Change Password
+                            </button>
+                            <button class="btn btn-outline" onclick="window.location.href='/dashboard'">
+                                <i class="fas fa-arrow-left"></i> Back to Dashboard
+                            </button>
+                        </div>
+
+                        <!-- Edit Profile Modal -->
+                        <div class="modal" id="editProfileModal">
+                            <div class="modal-content">
+                                <span class="close-modal" id="closeEditModal">&times;</span>
+                                <h3>Edit Profile</h3>
+                                <form id="editProfileForm">
+                                    <div class="form-group">
+                                        <label for="editName">Full Name</label>
+                                        <input type="text" id="editName" class="form-control" value="John Doe">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editAge">Age</label>
+                                        <input type="number" id="editAge" class="form-control" value="45">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editEmail">Email</label>
+                                        <input type="email" id="editEmail" class="form-control" value="john.doe@example.com">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editPhone">Phone</label>
+                                        <input type="tel" id="editPhone" class="form-control" value="+1 (555) 123-4567">
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-outline" id="cancelEditBtn">Cancel</button>
+                                        <button type="submit" class="btn">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Change Password Modal -->
+                        <div class="modal" id="changePasswordModal">
+                            <div class="modal-content">
+                                <span class="close-modal" id="closePasswordModal">&times;</span>
+                                <h3>Change Password</h3>
+                                <form id="changePasswordForm">
+                                    <div class="form-group">
+                                        <label for="currentPassword">Current Password</label>
+                                        <input type="password" id="currentPassword" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newPassword">New Password</label>
+                                        <input type="password" id="newPassword" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="confirmPassword">Confirm New Password</label>
+                                        <input type="password" id="confirmPassword" class="form-control">
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="button" class="btn btn-outline" id="cancelPasswordBtn">Cancel</button>
+                                        <button type="submit" class="btn">Change Password</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // User menu functionality
+            const userBtn = document.getElementById('userBtn');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            userBtn.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('active');
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/api/logout');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    window.location.href = '/';
+                }
+            });
+            
+            // Profile photo upload
+            const changePhotoBtn = document.getElementById('changePhotoBtn');
+            const profileUpload = document.getElementById('profileUpload');
+            const profilePic = document.getElementById('profilePic');
+            const profileImage = document.getElementById('profileImage');
+            
+            changePhotoBtn.addEventListener('click', () => {
+                profileUpload.click();
+            });
+            
+            profileUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                        alert('Please select an image smaller than 5MB');
+                        return;
+                    }
+                    
+                    if (!file.type.startsWith('image/')) {
+                        alert('Please select a valid image file');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        profileImage.src = e.target.result;
+                        profileImage.style.display = 'block';
+                        profilePic.querySelector('i').style.display = 'none';
+                        
+                        // Show success message
+                        showNotification('Profile photo updated successfully!', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Edit profile modal
+            const editProfileBtn = document.getElementById('editProfileBtn');
+            const editProfileModal = document.getElementById('editProfileModal');
+            const closeEditModal = document.getElementById('closeEditModal');
+            const cancelEditBtn = document.getElementById('cancelEditBtn');
+            
+            editProfileBtn.addEventListener('click', () => {
+                editProfileModal.style.display = 'flex';
+            });
+            
+            closeEditModal.addEventListener('click', () => {
+                editProfileModal.style.display = 'none';
+            });
+            
+            cancelEditBtn.addEventListener('click', () => {
+                editProfileModal.style.display = 'none';
+            });
+            
+            // Change password modal
+            const changePasswordBtn = document.getElementById('changePasswordBtn');
+            const changePasswordModal = document.getElementById('changePasswordModal');
+            const closePasswordModal = document.getElementById('closePasswordModal');
+            const cancelPasswordBtn = document.getElementById('cancelPasswordBtn');
+            
+            changePasswordBtn.addEventListener('click', () => {
+                changePasswordModal.style.display = 'flex';
+            });
+            
+            closePasswordModal.addEventListener('click', () => {
+                changePasswordModal.style.display = 'none';
+            });
+            
+            cancelPasswordBtn.addEventListener('click', () => {
+                changePasswordModal.style.display = 'none';
+            });
+            
+            // Edit profile form submission
+            document.getElementById('editProfileForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('editName').value;
+                const age = document.getElementById('editAge').value;
+                const email = document.getElementById('editEmail').value;
+                const phone = document.getElementById('editPhone').value;
+                
+                // Update profile display
+                document.getElementById('profileName').textContent = name;
+                document.getElementById('profileFullName').textContent = name;
+                document.getElementById('profileAge').textContent = age;
+                document.getElementById('profileEmail').textContent = email;
+                document.getElementById('profilePhone').textContent = phone;
+                
+                // Close modal
+                editProfileModal.style.display = 'none';
+                
+                // Show success message
+                showNotification('Profile updated successfully!', 'success');
+            });
+            
+            // Change password form submission
+            document.getElementById('changePasswordForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (!currentPassword || !newPassword || !confirmPassword) {
+                    showNotification('Please fill in all password fields', 'error');
+                    return;
+                }
+                
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match', 'error');
+                    return;
+                }
+                
+                if (newPassword.length < 6) {
+                    showNotification('Password must be at least 6 characters long', 'error');
+                    return;
+                }
+                
+                // Simulate password change
+                setTimeout(() => {
+                    changePasswordModal.style.display = 'none';
+                    document.getElementById('changePasswordForm').reset();
+                    showNotification('Password changed successfully!', 'success');
+                }, 1000);
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === editProfileModal) {
+                    editProfileModal.style.display = 'none';
+                }
+                if (e.target === changePasswordModal) {
+                    changePasswordModal.style.display = 'none';
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        });
+        
+        function showNotification(message, type) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = notification notification-${type};
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">&times;</button>
+            `;
+            
+            // Add styles if not already added
+            if (!document.querySelector('#notification-styles')) {
+                const styles = document.createElement('style');
+                styles.id = 'notification-styles';
+                styles.textContent = `
+                    .notification {
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 15px 20px;
+                        border-radius: 5px;
+                        color: white;
+                        z-index: 1000;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        min-width: 300px;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                        animation: slideIn 0.3s ease;
+                    }
+                    .notification-success {
+                        background: #4fc3a1;
+                    }
+                    .notification-error {
+                        background: #e74c3c;
+                    }
+                    .notification button {
+                        background: none;
+                        border: none;
+                        color: white;
+                        font-size: 18px;
+                        cursor: pointer;
+                        margin-left: 10px;
+                    }
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(styles);
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

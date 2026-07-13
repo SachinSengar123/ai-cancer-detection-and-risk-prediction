@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Cancer Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">CancerDetect</div>
+                    <div class="user-menu">
+                        <div class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName">User</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 8px;"></i>
+                        </div>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <div class="dropdown-item" onclick="window.location.href='/profile'">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                            <div class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="sidebar">
+                <div class="nav-item active" onclick="window.location.href='/dashboard'">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/assessment'">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Cancer Assessment</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/history'">
+                    <i class="fas fa-history"></i>
+                    <span>Account & History</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/image-analysis'">
+                    <i class="fas fa-image"></i>
+                    <span>Image Analysis</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/profile'">
+                    <i class="fas fa-user-cog"></i>
+                    <span>My Profile</span>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="welcome-section">
+                    <h1>Welcome to Your Dashboard</h1>
+                    <p>Select an option from the sidebar to get started with your cancer risk assessment and monitoring.</p>
+                    
+                    <div class="quick-actions">
+                        <div class="action-card" onclick="window.location.href='/assessment'">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>New Assessment</h3>
+                            <p>Start a new cancer risk assessment</p>
+                        </div>
+                        <div class="action-card" onclick="window.location.href='/history'">
+                            <i class="fas fa-history"></i>
+                            <h3>View History</h3>
+                            <p>Check your previous assessments</p>
+                        </div>
+                        <div class="action-card" onclick="window.location.href='/image-analysis'">
+                            <i class="fas fa-image"></i>
+                            <h3>Image Analysis</h3>
+                            <p>Upload medical images for analysis</p>
+                        </div>
+                        <div class="action-card" onclick="window.location.href='/profile'">
+                            <i class="fas fa-user-cog"></i>
+                            <h3>My Profile</h3>
+                            <p>Manage your account settings</p>
+                        </div>
+                    </div>
+
+                    <div class="recent-assessments">
+                        <h2>Recent Assessments</h2>
+                        <div class="assessment-cards">
+                            <div class="assessment-card">
+                                <h3>Last Assessment</h3>
+                                <p><strong>Date:</strong> Not available</p>
+                                <p><strong>Risk Level:</strong> Start your first assessment</p>
+                                <button class="btn" onclick="window.location.href='/assessment'">
+                                    Start Assessment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // User menu functionality
+            const userBtn = document.getElementById('userBtn');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            userBtn.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('active');
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/api/logout');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    window.location.href = '/';
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        });
+    </script>
+    {% include 'floating_chat_widget.html' %}
+</body>
+</html>

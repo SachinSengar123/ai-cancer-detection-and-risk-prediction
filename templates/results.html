@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Results - Cancer Detection System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="dashboard-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">CancerDetect</div>
+                    <div class="user-menu">
+                        <div class="user-btn" id="userBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span id="userName">User</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 8px;"></i>
+                        </div>
+                        <div class="dropdown-menu" id="dropdownMenu">
+                            <div class="dropdown-item" onclick="window.location.href='/profile'">
+                                <i class="fas fa-user"></i>
+                                <span>My Profile</span>
+                            </div>
+                            <div class="dropdown-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span>Logout</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="dashboard-content">
+            <div class="sidebar">
+                <div class="nav-item" onclick="window.location.href='/dashboard'">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/assessment'">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Cancer Assessment</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/history'">
+                    <i class="fas fa-history"></i>
+                    <span>Account & History</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/image-analysis'">
+                    <i class="fas fa-image"></i>
+                    <span>Image Analysis</span>
+                </div>
+                <div class="nav-item" onclick="window.location.href='/profile'">
+                    <i class="fas fa-user-cog"></i>
+                    <span>My Profile</span>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="content-section active">
+                    <div class="results-container">
+                        <h2 class="section-title">Assessment Results</h2>
+                        
+                        <div class="risk-indicator" id="riskIndicator">
+                            <h3>Your Cancer Risk Assessment</h3>
+                            <div class="risk-percentage" id="riskPercentage">0%</div>
+                            <p id="riskDescription">Based on your inputs, we are calculating your risk assessment.</p>
+                        </div>
+                        
+                        <div class="results-details">
+                            <div class="form-card">
+                                <h3><i class="fas fa-diagnoses"></i> Detected Information</h3>
+                                <div class="detail-item">
+                                    <div class="detail-label">Assessment Date:</div>
+                                    <div class="detail-value" id="resultDate">Loading...</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Patient Age:</div>
+                                    <div class="detail-value" id="resultAge">Loading...</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Detected Cancer Type:</div>
+                                    <div class="detail-value" id="resultCancerType">Analyzing...</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Stage:</div>
+                                    <div class="detail-value" id="resultStage">Analyzing...</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Confidence Level:</div>
+                                    <div class="detail-value" id="resultConfidence">Analyzing...</div>
+                                </div>
+                            </div>
+                            
+                            <div class="recommendations" id="recommendations">
+                                <!-- Recommendations will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn" id="printReportBtn">
+                                <i class="fas fa-print"></i> Print Report
+                            </button>
+                            <button class="btn btn-outline" onclick="window.location.href='/assessment'">
+                                <i class="fas fa-arrow-left"></i> Back to Assessment
+                            </button>
+                            <button class="btn btn-outline" onclick="window.location.href='/dashboard'">
+                                <i class="fas fa-tachometer-alt"></i> Back to Dashboard
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // User menu functionality
+            const userBtn = document.getElementById('userBtn');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            
+            userBtn.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('active');
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/api/logout');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    window.location.href = '/';
+                }
+            });
+            
+            // Load and display results
+            const resultsData = JSON.parse(sessionStorage.getItem('assessmentResults'));
+            
+            if (resultsData && resultsData.success) {
+                displayResults(resultsData);
+            } else {
+                // If no results data, redirect to assessment
+                window.location.href = '/assessment';
+            }
+            
+            function displayResults(data) {
+                const riskScore = data.risk_score;
+                const results = data.results;
+                
+                // Update risk indicator
+                document.getElementById('riskPercentage').textContent = riskScore + '%';
+                document.getElementById('riskDescription').textContent = results.risk_description || 'Based on your inputs, here is your risk assessment.';
+                
+                // Update risk indicator color
+                const riskIndicator = document.getElementById('riskIndicator');
+                if (riskScore > 50) {
+                    riskIndicator.className = 'risk-indicator risk-high';
+                } else if (riskScore > 30) {
+                    riskIndicator.className = 'risk-indicator risk-medium';
+                } else {
+                    riskIndicator.className = 'risk-indicator risk-low';
+                }
+                
+                // Update details
+                document.getElementById('resultDate').textContent = new Date().toLocaleDateString();
+                document.getElementById('resultAge').textContent = results.patient_age || 'Not specified';
+                document.getElementById('resultCancerType').textContent = results.cancer_type || 'None detected';
+                document.getElementById('resultStage').textContent = results.stage || 'N/A';
+                document.getElementById('resultConfidence').textContent = riskScore + '% confidence';
+                
+                // Generate recommendations
+                generateRecommendations(riskScore, results.recommendations);
+            }
+            
+            function generateRecommendations(riskScore, recommendations) {
+                const recommendationsContainer = document.getElementById('recommendations');
+                let recommendationsHTML = '';
+                
+                if (riskScore > 50) {
+                    recommendationsHTML = `
+                        <div class="recommendation-card">
+                            <h3><i class="fas fa-calendar-alt"></i> Monitoring Schedule</h3>
+                            <p>Based on your high risk level, we recommend:</p>
+                            <ul>
+                                <li>Monthly self-examinations</li>
+                                <li>Quarterly check-ups with your primary care physician</li>
+                                <li>Immediate consultation with an oncologist</li>
+                                <li>Regular screening tests (CT scan, mammogram, etc.)</li>
+                            </ul>
+                        </div>
+                        <div class="recommendation-card">
+                            <h3><i class="fas fa-utensils"></i> Diet Plan</h3>
+                            <p>Foods rich in polyphenols and curcumin that may help reduce cancer risk:</p>
+                            <div class="food-list">
+                                <div class="food-item">Turmeric</div>
+                                <div class="food-item">Green Tea</div>
+                                <div class="food-item">Berries</div>
+                                <div class="food-item">Dark Chocolate</div>
+                                <div class="food-item">Broccoli</div>
+                                <div class="food-item">Tomatoes</div>
+                                <div class="food-item">Walnuts</div>
+                                <div class="food-item">Olive Oil</div>
+                            </div>
+                        </div>
+                        <div class="recommendation-card">
+                            <h3><i class="fas fa-user-md"></i> Doctor Recommendations</h3>
+                            <p>Based on your risk profile, we recommend consulting with:</p>
+                            <ul>
+                                <li>Oncologist - Dr. Suresh Advani</li>
+                                <li>Primary Care Physician</li>
+                                <li>Nutritionist - Dr. Shikha Sharma, RD</li>
+                                <li>Specialist based on specific symptoms</li>
+                            </ul>
+                        </div>
+                        <div class="recommendation-card">
+                            <h3><i class="fas fa-vial"></i> Recommended Tests</h3>
+                            <p>Based on your symptoms and risk factors, the following tests are recommended:</p>
+                            <div class="test-list">
+                                <div class="test-item">Complete Blood Count</div>
+                                <div class="test-item">CT Scan</div>
+                                <div class="test-item">Biopsy if needed</div>
+                                <div class="test-item">MRI</div>
+                                <div class="test-item">Cancer Marker Tests</div>
+                                <div class="test-item">Genetic Testing</div>
+                            </div>
+                        </div>
+                    `;
+                } else if (riskScore > 30) {
+                    recommendationsHTML = `
+                        <div class="recommendation-card">
+                            <h3><i class="fas fa-heartbeat"></i> Healthy Lifestyle Recommendations</h3>
+                            <p>To reduce your cancer risk, we recommend:</p>
+                            <ul>
+                                <li>Maintain a healthy weight through diet and exercise</li>
+                                <li>Limit alcohol consumption</li>
+                                <li>Avoid tobacco in all forms</li>
+                                <li>Eat a balanced diet rich in fruits and vegetables</li>
+                                <li>Use sun protection when outdoors</li>
+                                <li>Get regular physical activity</li>
+                            </ul>
+                        </div>
+                        <div class="recommendation-card">
+                            <h3><i class="fas fa-calendar-alt"></i> Screening Schedule</h3>
+                            <p>Based on your risk level, we recommend the following screening schedule:</p>
+                            <ul>
+                                <li>Annual physical examination</li>
+                                <li>Age-appropriate cancer screenings</li>
+                                <li>Regular blood tests</li>
+                                <li>Dental check-ups every 6 months</li>
+                            </ul>
+                        </div>
+                    `;
+                } else {
+                    recommendationsHTML = `
+                        <div class="recommendation-card">
+                            <h3><i class="fas fa-heartbeat"></i> Maintain Healthy Lifestyle</h3>
+                            <p>Continue with these healthy habits to maintain your low cancer risk:</p>
+                            <ul>
+                                <li>Eat a balanced diet with plenty of fruits and vegetables</li>
+                                <li>Exercise regularly (at least 150 minutes per week)</li>
+                                <li>Maintain a healthy weight</li>
+                                <li>Avoid tobacco products</li>
+                                <li>Limit alcohol consumption</li>
+                                <li>Use sun protection</li>
+                                <li>Get regular health check-ups</li>
+                                <li>Practice stress management techniques</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                recommendationsContainer.innerHTML = recommendationsHTML;
+            }
+            
+            // Print functionality
+            document.getElementById('printReportBtn').addEventListener('click', () => {
+                window.print();
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
